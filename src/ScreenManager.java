@@ -57,7 +57,7 @@ public class ScreenManager {
 				vc.setDisplayMode(dm);
 			}catch(Exception e) { }
 		}
-		f.createBufferStrategy(2);
+		f.createBufferStrategy(5);
 	}
 
 	public Graphics2D getGraphics(){

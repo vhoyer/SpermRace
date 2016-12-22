@@ -50,6 +50,15 @@ public class Animation{
 		return (OneScene)scenes.get(x);
 	}
 
+	////////////////////////////////
+	public int getWidth(){
+		return getImage().getWidth(null);
+	}
+
+	public int getHeight(){
+		return getImage().getHeight(null);
+	}
+
 ///////////////// private inner class ////////////////////////
 	class OneScene{
 		Image pic;
