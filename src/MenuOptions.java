@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.HashMap;
 
 public class MenuOptions {
 	private Graphics2D g;
@@ -7,16 +8,16 @@ public class MenuOptions {
 	private Dimension padding = new Dimension(20,10);
 	private Point offset;
 
-	public MenuOptions(Window w, Graphics2D g, Font font, String[] entries, Point offset){
+	public MenuOptions(Window w, Graphics2D g, Font font, HashMap<Runnable,String> entries, Point offset){
 		if(offset != null) this.offset = offset;
 		else this.offset = new Point(0,0);
 
 		this.g = g;
 		metrics = g.getFontMetrics(font);
 
-		Rectangle defaultEntryBox = getBigestEntryBox(entries);
+		Rectangle defaultEntryBox = getBigestEntryBox(entries.values().toArray());
 
-		itens = new MenuItem[entries.length];
+		itens = new MenuItem[entries.size()];
 		for(int i = 0;i < itens.length; i++){
 			Rectangle thisBox = defaultEntryBox.getBounds();
 
@@ -28,17 +29,18 @@ public class MenuOptions {
 			itens[i] = new MenuItem(
 					w,
 					metrics,
-					entries[i],
+					(String)entries.values().toArray()[i],
+					(Runnable)entries.keySet().toArray()[i],
 					thisBox,
 					itemOffset);
 		}
 	}
 
-	public Rectangle getBigestEntryBox(String[] entries){//{{{
+	public Rectangle getBigestEntryBox(Object[] entries){//{{{
 		int biggestStringWidth = 0;
 		int biggestStringHeight = metrics.getHeight();
 		for(int i = 0; i < entries.length; i++){
-			int currentStringWidth = metrics.stringWidth(entries[i]);
+			int currentStringWidth = metrics.stringWidth((String)entries[i]);
 
 			if(currentStringWidth > biggestStringWidth)
 				biggestStringWidth = currentStringWidth;
@@ -56,9 +58,16 @@ public class MenuOptions {
 	}
 
 	public void update(long timePassed, Point mouse){
-		int i;
-		for(i = 0; i < itens.length; i++){
+		for(int i = 0; i < itens.length; i++){
 			itens[i].isHover(itens[i].getBox().contains(mouse), timePassed);
+		}
+	}
+
+	public void click(Point mouse){
+		for(int i = 0; i < itens.length; i++){
+			if(itens[i].getBox().contains(mouse)){
+				itens[i].click();
+			}
 		}
 	}
 
@@ -66,6 +75,7 @@ public class MenuOptions {
 		private FontMetrics metrics;
 		private Rectangle entryBox;
 		private Dimension minSize;
+		private Runnable action;
 		private Window w;
 		private String text;
 		private float maxGrow;
@@ -73,7 +83,7 @@ public class MenuOptions {
 		private float height;
 		private Point offset;
 
-		public MenuItem(Window w, FontMetrics metrics, String text, Rectangle entryBox, Point offset){
+		public MenuItem(Window w, FontMetrics metrics, String text, Runnable action, Rectangle entryBox, Point offset){
 			this.w = w;
 			this.text = text;
 			this.entryBox = entryBox;
@@ -83,6 +93,7 @@ public class MenuOptions {
 			this.maxGrow = 1.1f;
 			this.width = minSize.width;
 			this.height = minSize.height;
+			this.action = action;
 		}
 
 		public void isHover(boolean inHover, long timePassed){
@@ -103,6 +114,10 @@ public class MenuOptions {
 					offset.x - this.width/2,
 					offset.y - this.height/2,
 					this.width, this.height);
+		}
+
+		public void click(){
+			action.run();
 		}
 
 		public void draw(Graphics2D g){
