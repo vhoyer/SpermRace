@@ -14,6 +14,7 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 	private boolean running;
 	protected ScreenManager sm;
 	public Font font = new Font("Arial", Font.PLAIN, 20);
+	private Runnable after = null;
 
 	//stop Method
 	public void stop(){
@@ -70,6 +71,12 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 				Thread.sleep(10);
 			}catch(Exception e){ }
 		}
+		executeAfter();
+	}
+
+	public void executeAfter() {
+		if (after != null)
+			(new Thread(after)).start();
 	}
 
 	public void update(long timePassed) { }
@@ -79,6 +86,9 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 	//////////////////////////////////////
 	public boolean getRunning(){
 		return running;
+	}
+	public void setAfter(Runnable r){
+		after = r;
 	}
 	//////////////////////////////////////
 

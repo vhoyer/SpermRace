@@ -1,5 +1,5 @@
 import java.awt.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class MenuOptions {
 	private Graphics2D g;
@@ -8,7 +8,7 @@ public class MenuOptions {
 	private Dimension padding = new Dimension(20,10);
 	private Point offset;
 
-	public MenuOptions(Window w, Graphics2D g, Font font, HashMap<Runnable,String> entries, Point offset){
+	public MenuOptions(Window w, Graphics2D g, Font font, LinkedHashMap<Runnable,String> entries, Point offset){
 		if(offset != null) this.offset = offset;
 		else this.offset = new Point(0,0);
 
