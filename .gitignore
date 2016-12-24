@@ -1,2 +1,3 @@
 Session.vim
 bin/*.class
+.syntastic_javac_config
