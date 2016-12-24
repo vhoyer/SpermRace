@@ -24,9 +24,15 @@ $(bin)/%.class: $(src)/%.java
 clean:
 	rm bin/*.class
 
-build:
+jar: $(list)
+	jar -cfmv SpermRace.jar MANIFEST.MF bin/*.class
+
+build: $(list)
+	javac -g -d $(bin) $(CLASSPATH) $(src)/*.java
+
+rebuild:
 	mkdir $(bin) || rm $(bin)/*.class || echo "nothing to remove"
 	javac -g -d $(bin) $(CLASSPATH) $(src)/*.java
 	java $(CLASSPATH) Application
 
-.PHONY: run clean rebuild
+.PHONY: run clean rebuild build jar
