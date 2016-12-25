@@ -17,7 +17,7 @@ public class Menu extends Core implements MouseMotionListener,MouseListener,KeyL
 		win.addKeyListener(this);
 
 		LinkedHashMap<Runnable,String> entries = new LinkedHashMap<>();
-		entries.put(() -> runNext(new SpermRace()), "Single Player");
+		entries.put(() -> runNext(new DifficultChoice()), "Single Player");
 		entries.put(() -> runNext(null), "Multi Player");
 		entries.put(() -> runNext(null), "Options");
 		entries.put(() -> runNext(null), "Quit");

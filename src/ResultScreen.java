@@ -24,7 +24,7 @@ public class ResultScreen extends Core implements MouseMotionListener,MouseListe
 		rs = new Resources();
 
 		LinkedHashMap<Runnable,String> entries = new LinkedHashMap<>();
-		entries.put(() -> runNext(new SpermRace()), "Play Again");
+		entries.put(() -> runNext(new DifficultChoice()), "Play Again");
 		entries.put(() -> runNext(new Menu()), "Menu");
 		entries.put(() -> runNext(null), "Quit");
 		menu = new MenuOptions(win, sm.getGraphics(), font, entries, new Point(win.getWidth()/2 - 200,0));

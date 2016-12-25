@@ -168,15 +168,15 @@ public class SpermRace extends Core implements KeyListener {
 			int r = player.getHowManyRight();
 			int w = player.getHowManyWrong();
 			int p = calculatePoints();
-			return new Results(p, r, w, placementN, died);
+			return new Results(p, r, w, placementN, died, difficult);
 		}
 		else throw new Exception("Can't get results while running.");
 	}
 
 	public class Results {
-		int points, gotRight, gotWrong;
+		int points, gotRight, gotWrong, difficult;
 		String position, msg = "You've finished the race!", msg2 = "";
-		public Results(int points, int gotRight, int gotWrong, String position, boolean died){
+		public Results(int points, int gotRight, int gotWrong, String position, boolean died, int difficult){
 			this.position = position;
 			this.points = points;
 			this.gotRight = gotRight;
@@ -212,6 +212,9 @@ public class SpermRace extends Core implements KeyListener {
 		}
 		public int getGotWrong(){
 			return gotWrong;
+		}
+		public int getDifficult(){
+			return difficult;
 		}
 		public String getPosition(){
 			return position;
