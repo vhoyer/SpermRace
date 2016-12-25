@@ -25,7 +25,7 @@ clean:
 	rm bin/*.class
 
 jar: $(list)
-	jar -cfmv SpermRace.jar MANIFEST.MF bin/*.class
+	jar -cfmv SpermRace.jar MANIFEST.MF bin/
 
 build: $(list)
 	javac -g -d $(bin) $(CLASSPATH) $(src)/*.java

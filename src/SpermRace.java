@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class SpermRace extends Core implements KeyListener {
@@ -16,6 +17,7 @@ public class SpermRace extends Core implements KeyListener {
 		//initializers
 		win = sm.getFullScreenWindow();
 		win.addKeyListener(this);
+		win.setCursor(sm.blankCursor());
 		rs = new Resources();
 
 		//difficulty settings
@@ -98,11 +100,19 @@ public class SpermRace extends Core implements KeyListener {
 
 		if (player.getY() > win.getHeight()){
 			died = true;
-			stop();
+			endGame();
 		}
 		else if (player.getY() <= 0){
-			stop();
+			endGame();
 		}
+	}
+
+	public void endGame(){
+		stop();
+		try{
+			ResultScreen results = new ResultScreen(this.getResults());
+			this.setAfter(() -> results.run());
+		}catch(Exception e) { }
 	}
 
 	private String calcPlacement(){
@@ -138,6 +148,7 @@ public class SpermRace extends Core implements KeyListener {
 	public void keyPressed(KeyEvent e){
 		int KeyCode = e.getKeyCode();
 		if (KeyCode == KeyEvent.VK_ESCAPE){
+			setAfter(() -> new Menu().run());
 			stop();
 		}
 		else{
@@ -160,5 +171,56 @@ public class SpermRace extends Core implements KeyListener {
 			return new Results(p, r, w, placementN, died);
 		}
 		else throw new Exception("Can't get results while running.");
+	}
+
+	public class Results {
+		int points, gotRight, gotWrong;
+		String position, msg = "You've finished the race!", msg2 = "";
+		public Results(int points, int gotRight, int gotWrong, String position, boolean died){
+			this.position = position;
+			this.points = points;
+			this.gotRight = gotRight;
+			this.gotWrong = gotWrong;
+			if (died) msg = "You failed, died in the middle of the way.";
+			else if (!( new String(position).equals("1st") )){
+				msg2 = "Although, you wasn't born, but hey, at least you finished.";
+			}
+		}
+		public void draw(Graphics2D g, Point p){
+			String resultMsg = getMessage();
+			String resultMs2 = getMessage2();
+			String resultPla = "Placement: " + getPosition();
+			String resultPon = "Points: " + getPoints();
+			String resultRgt = "How many right key strokes: " + getGotRight();
+			String resultWrg = "How many wrong key strokes: " + getGotWrong();
+
+			FontMetrics m = g.getFontMetrics(g.getFont());
+			g.drawString(resultMsg, p.x, p.y + (0 * m.getHeight() + 50));
+			g.drawString(resultMs2, p.x, p.y + (1 * m.getHeight() + 50));
+			//
+			g.drawString(resultPla, p.x, p.y + (3 * m.getHeight() + 50));
+			//
+			g.drawString(resultPon, p.x, p.y + (5 * m.getHeight() + 50));
+			g.drawString(resultRgt, p.x, p.y + (6 * m.getHeight() + 50));
+			g.drawString(resultWrg, p.x, p.y + (7 * m.getHeight() + 50));
+		}
+		public int getPoints() {
+			return points;
+		}
+		public int getGotRight(){
+			return gotRight;
+		}
+		public int getGotWrong(){
+			return gotWrong;
+		}
+		public String getPosition(){
+			return position;
+		}
+		public String getMessage(){
+			return msg;
+		}
+		public String getMessage2(){
+			return msg2;
+		}
 	}
 }

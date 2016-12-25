@@ -33,7 +33,7 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 	}
 
 	//set to full screen
-	public void init(){
+	public synchronized void init(){
 		sm = new ScreenManager();
 		DisplayMode dm = sm.findFirsCompatibleMode(modes);
 		sm.setFullScreen(dm);
@@ -75,8 +75,12 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 	}
 
 	public void executeAfter() {
-		if (after != null)
-			(new Thread(after)).start();
+		try{
+			if (after != null)
+				(new Thread(after)).start();
+		}catch(java.lang.NullPointerException e){
+			System.out.println("Error: "+e);
+		}
 	}
 
 	public void update(long timePassed) { }

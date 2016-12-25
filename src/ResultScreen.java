@@ -1,27 +1,33 @@
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import java.util.LinkedHashMap;
+import javax.swing.*;
 
-public class Menu extends Core implements MouseMotionListener,MouseListener,KeyListener{
+public class ResultScreen extends Core implements MouseMotionListener,MouseListener,KeyListener {
+	private SpermRace.Results result;
 	private Window win;
+	private Resources rs;
 	private MenuOptions menu;
 	private Animation sperm;
-	private Resources rs = new Resources();
-	private Point curMousePoint = new Point(0,0);
+	private Point curMousePoint = new Point(0, 0);
 
-	public synchronized void setup(){
+	public ResultScreen(SpermRace.Results result){
+		this.result = result;
+	}
+
+	public void setup(){
 		win = sm.getFullScreenWindow();
 		win.addMouseListener(this);
 		win.addMouseMotionListener(this);
 		win.addKeyListener(this);
 
+		rs = new Resources();
+
 		LinkedHashMap<Runnable,String> entries = new LinkedHashMap<>();
-		entries.put(() -> runNext(new SpermRace()), "Single Player");
-		entries.put(() -> runNext(null), "Multi Player");
-		entries.put(() -> runNext(null), "Options");
+		entries.put(() -> runNext(new SpermRace()), "Play Again");
+		entries.put(() -> runNext(new Menu()), "Menu");
 		entries.put(() -> runNext(null), "Quit");
-		menu = new MenuOptions(win, sm.getGraphics(), font, entries, new Point(0,100));
+		menu = new MenuOptions(win, sm.getGraphics(), font, entries, new Point(win.getWidth()/2 - 200,0));
 
 		sperm = new Animation();
 		sperm.addScene(new ImageIcon( rs.root+"/imgs/sperm1.png" ).getImage(),1000);
@@ -43,11 +49,10 @@ public class Menu extends Core implements MouseMotionListener,MouseListener,KeyL
 		g.drawImage(rs.bg, 0,0, win.getWidth(), rs.bg.getHeight(null), null);
 		g.drawImage(sperm.getImage(), 50,( win.getHeight()/2 - sperm.getHeight()/2 ),null);
 		//UI
-		g.drawImage(
-				rs.title,
-				win.getWidth()/2 - rs.title.getWidth(null)/2,
-				10,
-				null);
+		g.setColor(win.getForeground());
+		result.draw(g, new Point(
+				win.getWidth()/2 - 200,
+				win.getHeight()/2 - 100));
 			//Menu
 		menu.draw(g);
 	}

@@ -115,4 +115,9 @@ public class ScreenManager {
 		}
 		return null;
 	}
+
+	public Cursor blankCursor(){
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		return Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank");
+	}
 }
