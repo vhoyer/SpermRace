@@ -13,8 +13,8 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 	};
 	private boolean running;
 	protected ScreenManager sm;
-	public Font font = new Font("Arial", Font.PLAIN, 20);
-	private Runnable after = null;
+	public Font font;
+	private Runnable after;
 
 	//stop Method
 	public void stop(){
@@ -39,6 +39,7 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 		sm.setFullScreen(dm);
 
 		Window w = sm.getFullScreenWindow();
+		font = new Font("Arial", Font.PLAIN, 20);
 		w.setFont(font);
 		w.setBackground(Color.black);
 		w.setForeground(Color.white);
@@ -74,12 +75,15 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 		executeAfter();
 	}
 
-	public void executeAfter() {
+	public synchronized void executeAfter() {
 		try{
 			if (after != null)
 				(new Thread(after)).start();
+			else
+				System.out.println("Exited successfuly");
 		}catch(java.lang.NullPointerException e){
-			System.out.println("Error: "+e);
+			System.out.println("Error: ");
+			System.out.println(e);
 		}
 	}
 

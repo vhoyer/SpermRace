@@ -8,6 +8,10 @@ public class ScreenManager {
 	private GraphicsDevice vc;
 
 	public ScreenManager(){
+		init();
+	}
+
+	public void init(){
 		GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		vc = e.getDefaultScreenDevice();
 	}
@@ -62,11 +66,21 @@ public class ScreenManager {
 
 	public Graphics2D getGraphics(){
 		Window w = vc.getFullScreenWindow();
+		BufferStrategy s = null;
 		if(w != null){
-			BufferStrategy s = w.getBufferStrategy();
+			s = w.getBufferStrategy();
 			return (Graphics2D)s.getDrawGraphics();
+		} else {
+			for(int i = 0; i < 5; i++){
+				init();
+				w = vc.getFullScreenWindow();
+				if (w == null) continue;
+
+				s = w.getBufferStrategy();
+				return (Graphics2D)s.getDrawGraphics();
+			}
+			return null;
 		}
-		return null;
 	}
 
 	public void update(){
@@ -80,7 +94,11 @@ public class ScreenManager {
 	}
 
 	public Window getFullScreenWindow(){
-		return vc.getFullScreenWindow();
+		Window result = vc.getFullScreenWindow();
+		while(result == null){
+			init();
+		}
+		return result;
 	}
 
 	public int getWidth(){
