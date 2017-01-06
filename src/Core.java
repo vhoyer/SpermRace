@@ -13,6 +13,7 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 	};
 	private boolean running;
 	protected ScreenManager sm;
+	protected Window win;
 	public Font font;
 	private Runnable after;
 
@@ -27,6 +28,9 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 			init();
 			setup();
 			gameLoop();
+		}catch(Exception err){
+			System.out.println("Internal error in method run()");
+			err.printStackTrace(System.out);
 		}finally{
 			sm.restoreScreen();
 		}
@@ -38,20 +42,15 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 		DisplayMode dm = sm.findFirsCompatibleMode(modes);
 		sm.setFullScreen(dm);
 
-		Window w = sm.getFullScreenWindow();
+		win = sm.getFullScreenWindow(dm);
 		font = new Font("Arial", Font.PLAIN, 20);
-		w.setFont(font);
-		w.setBackground(Color.black);
-		w.setForeground(Color.white);
+		win.setFont(font);
+		win.setBackground(Color.black);
+		win.setForeground(Color.white);
 		running = true;
 	}
 
-	public void setDefaultListeners(){
-		Window w = sm.getFullScreenWindow();
-		w.addKeyListener(this);
-	}
-
-	public void gameLoop(){
+	public synchronized void gameLoop(){
 		long startingTime = System.currentTimeMillis();
 		long cumTime = startingTime;
 
@@ -69,8 +68,8 @@ public abstract class Core implements KeyListener,MouseMotionListener,MouseListe
 			sm.update();
 
 			try{
-				Thread.sleep(10);
-			}catch(Exception e){ }
+				Thread.sleep(20);
+			}catch(Exception e){ System.out.println("Thread slp20 error"); }
 		}
 		executeAfter();
 	}

@@ -5,7 +5,6 @@ import javax.swing.*;
 
 public class ResultScreen extends Core implements MouseMotionListener,MouseListener,KeyListener {
 	private SpermRace.Results result;
-	private Window win;
 	private Resources rs;
 	private MenuOptions menu;
 	private Animation sperm;
@@ -16,7 +15,6 @@ public class ResultScreen extends Core implements MouseMotionListener,MouseListe
 	}
 
 	public void setup(){
-		win = sm.getFullScreenWindow();
 		win.addMouseListener(this);
 		win.addMouseMotionListener(this);
 		win.addKeyListener(this);

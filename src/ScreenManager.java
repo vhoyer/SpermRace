@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 public class ScreenManager {
 	private GraphicsDevice vc;
+	private DisplayMode compatibleDisplayMode;
 
 	public ScreenManager(){
 		init();
@@ -50,6 +51,7 @@ public class ScreenManager {
 	}
 
 	public void setFullScreen(DisplayMode dm){
+		compatibleDisplayMode = dm;
 		JFrame f = new JFrame();
 		f.setUndecorated(true);
 		f.setIgnoreRepaint(true);
@@ -65,22 +67,17 @@ public class ScreenManager {
 	}
 
 	public Graphics2D getGraphics(){
-		Window w = vc.getFullScreenWindow();
-		BufferStrategy s = null;
-		if(w != null){
-			s = w.getBufferStrategy();
-			return (Graphics2D)s.getDrawGraphics();
-		} else {
-			for(int i = 0; i < 5; i++){
-				init();
-				w = vc.getFullScreenWindow();
-				if (w == null) continue;
-
-				s = w.getBufferStrategy();
+		for(int i = 0; i < 5; i++){
+			Window w = getFullScreenWindow(compatibleDisplayMode);
+			if(w != null){
+				BufferStrategy s = w.getBufferStrategy();
 				return (Graphics2D)s.getDrawGraphics();
 			}
-			return null;
+			init();
 		}
+
+		System.out.println("getGraphics: window is null");
+		throw new java.lang.NullPointerException();
 	}
 
 	public void update(){
@@ -93,12 +90,24 @@ public class ScreenManager {
 		}
 	}
 
-	public Window getFullScreenWindow(){
+	public synchronized Window getFullScreenWindow(DisplayMode dm){
 		Window result = vc.getFullScreenWindow();
-		while(result == null){
+
+		int i = 0;
+		while(result == null && i < 5){
+			i++;
+
 			init();
+			setFullScreen(dm);
+			result = vc.getFullScreenWindow();
 		}
-		return result;
+
+		if(result != null){
+			return result;
+		}
+
+		System.out.println("getFullScreenWindow: window is null");
+		throw new java.lang.NullPointerException();
 	}
 
 	public int getWidth(){
@@ -117,7 +126,7 @@ public class ScreenManager {
 		return 0;
 	}
 
-	public void restoreScreen(){
+	public synchronized void restoreScreen(){
 		Window w = vc.getFullScreenWindow();
 		if(w != null){
 			w.dispose();

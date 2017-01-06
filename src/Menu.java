@@ -4,14 +4,12 @@ import javax.swing.*;
 import java.util.LinkedHashMap;
 
 public class Menu extends Core implements MouseMotionListener,MouseListener,KeyListener{
-	private Window win;
 	private MenuOptions menu;
 	private Animation sperm;
 	private Resources rs = new Resources();
 	private Point curMousePoint = new Point(0,0);
 
 	public synchronized void setup(){
-		win = sm.getFullScreenWindow();
 		win.addMouseListener(this);
 		win.addMouseMotionListener(this);
 		win.addKeyListener(this);

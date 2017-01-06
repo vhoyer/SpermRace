@@ -4,14 +4,12 @@ import javax.swing.*;
 import java.util.LinkedHashMap;
 
 public class DifficultChoice extends Core implements MouseMotionListener,MouseListener {
-	private Window win;
 	private Resources rs;
 	private SpermRace spermRace;
 	private MenuOptions menu;
 	private Point curMousePoint = new Point(0, 0);
 
 	public void setup(){
-		win = sm.getFullScreenWindow();
 		win.addMouseListener(this);
 		win.addMouseMotionListener(this);
 

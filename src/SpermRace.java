@@ -6,7 +6,6 @@ import javax.swing.*;
 public class SpermRace extends Core implements KeyListener {
 	private Player player;
 	private Player[] npc;
-	private Window win;
 	private int difficult = 1;
 	private String placementN;
 	private String score;
@@ -15,7 +14,6 @@ public class SpermRace extends Core implements KeyListener {
 
 	public synchronized void setup(){
 		//initializers
-		win = sm.getFullScreenWindow();
 		win.addKeyListener(this);
 		win.setCursor(sm.blankCursor());
 		rs = new Resources();
